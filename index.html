@@ -1140,7 +1140,9 @@ right: 3%;
 }
 </style>
 <script>
-var socket = io();
+var socket = io("https://m19604.github.io/test", {
+path: "/test/"
+});
 var loaded = false;
 var loadTime = 4500;
 var form = document.getElementById("chatForm");

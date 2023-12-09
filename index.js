@@ -1,16 +1,26 @@
-const express = require('express')
-const app = express()
-const PORT = 4000
+const express = require('express');
+const { createServer } = require('node:http');
+const { join } = require('node:path');
+const { Server } = require('socket.io');
 
+const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
-app.get('/home', (req, res) => {
-  res.status(200).json('Welcome, your app is working well');
-})
-
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.get('/', (req, res) => {
+  res.sendFile(join(__dirname, 'index.html'));
 });
 
-// Export the Express API
-module.exports = app
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg);
+  });
+});
+
+server.listen(3000, () => {
+  console.log('server running at http://localhost:3000');
+});
